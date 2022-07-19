@@ -1,0 +1,5 @@
+ [flake8]
+ignore = D203,W503,E501
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,*migrations*,.venv,
+max-complexity = 15
+max-line-length = 119
