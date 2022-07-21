@@ -11,7 +11,6 @@ help:
 install: ## Instala / Atualiza os pacotes python no virtualenv instalado.
 	pip install --no-cache -U pip setuptools wheel
 	pip install --no-cache -r requirements-dev.txt
-	pip install --no-cache -r requirements.txt
 clean:
 	@py3clean .
 ## @ Running
@@ -24,6 +23,8 @@ migrations: ## Cria as migrações
 	python manage.py makemigrations
 migrate: ## Aplica as migrações
 	python migrate_tenants.py
+manage_tenant: ## Aplica as migrações
+	python manage_tenants.py
 
 ## @ testes
 .PHONY: test cover

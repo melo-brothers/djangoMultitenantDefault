@@ -1,0 +1,9 @@
+-r requirements.txt
+black
+coverage
+flake8
+isort
+pytest
+pytest-cov
+pytest-django
+pytest-watch
