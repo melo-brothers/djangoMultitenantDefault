@@ -12,22 +12,22 @@ THREADS = []
 
 def main():
     try:
-        DATABASES = json.loads(os.environ.get("DATABASE_URL", "{}"))
+        DATABASES = json.loads(os.environ.get("DATABASE_URLS", "{}"))
 
     except Exception as e:
-        print("Erro ao processar a variável DATABASES")
+        print("Erro ao processar a variável DATABASE_URLS")
         print(e)
         sys.exit(1)
     if not DATABASES:
-        print(f"Variável DATABASE_URL está vazia => {DATABASES}")
+        print(f"Variável DATABASE_URLS está vazia => {DATABASES}")
         with open(".env", "r") as file:
             env_ = file.readlines()
         for line in env_:
-            if line.startswith("DATABASE_URL"):
+            if line.startswith("DATABASE_URLS"):
                 DATABASES = json.loads(line.split("=", 1)[-1])
                 break
     if not DATABASES:
-        print("DATABASE_URL não encontrado no .env")
+        print("DATABASE_URLS não encontrado no .env")
         sys.exit(1)
 
     for item in DATABASES.items():
@@ -43,7 +43,7 @@ def migrate_process(key, value):
     print(f"Starting migrations from tenant {key}")
 
     database = json.dumps({"default": value}, indent=4)
-    subprocess.Popen(f"DATABASE_URL='{database}' python manage.py migrate", shell=True)
+    subprocess.Popen(f"DATABASE_URLS='{database}' python manage.py migrate", shell=True)
     print(f"thread finished {key}...exiting")
     sys.exit(0)
 

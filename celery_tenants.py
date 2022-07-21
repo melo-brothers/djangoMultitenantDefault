@@ -28,14 +28,14 @@ def main(application):
         return
     application = "worker" if application == "celery" else application
     try:
-        DATABASES = json.loads(os.getenv("DATABASE_URL", '{}'))
+        DATABASES = json.loads(os.getenv("DATABASE_URLS", '{}'))
 
     except Exception as e:
         print("Erro ao processar a variável DATABASES")
         print(e)
         sys.exit(1)
     if not DATABASES:
-        print(f"Variával DATABASE_URL está vazia =>{DATABASES}")
+        print(f"Variával DATABASE_URLS está vazia =>{DATABASES}")
     port = 5566
     for app in application.split("/"):
         for db in DATABASES.items():
@@ -51,10 +51,10 @@ def main(application):
 def celery_process(key, value, app, port):
     print(f"Starting {app} from tenant {key}")
     database = json.dumps({"default": value}, indent=4)
-    cmd = f"DATABASE_URL='{database}' celery -A project {app} -l INFO"
+    cmd = f"DATABASE_URLS='{database}' celery -A project {app} -l INFO"
     if app == "flower":
         cmd = (
-            f"DATABASE_URL='{database}' celery -A project flower "
+            f"DATABASE_URLS='{database}' celery -A project flower "
             f"--address=0.0.0.0 --port={port} "
             "--basic_auth=$FLOWER_ADMIN_USER:$FLOWER_ADMIN_PASSWORD"
         )

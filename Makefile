@@ -23,13 +23,7 @@ shell: ## Inicializa o shell
 migrations: ## Cria as migrações
 	python manage.py makemigrations
 migrate: ## Aplica as migrações
-	python manage.py migrate
-empty: ## cria migração zerada na app escolhida.
-	python manage.py makemigrations --empty ${APP}
-admin:   ## altera senha do admin
-	python manage.py changepassword admin
-up: migrate admin run  ## Roda toda ação necessária para começar o desenvolvimento.
-
+	python migrate_tenants.py
 
 ## @ testes
 .PHONY: test cover
@@ -39,19 +33,24 @@ cover: ## Executa os testes e gera o arquivo de report
 	pytest
 
 ## @ lint
-.PHONY: lint_black flake lint_isort lint
+.PHONY: lint_black flake lint_isort git_lint lint
 lint_black:
 	black --check ${PROJECT}
 flake:
 	flake8 ${FLAKE8_FLAGS} ${PROJECT}
 lint_isort:
 	isort ${ISORT_FLAGS} --check ${PROJECT}
+git_lint:
+	flake8 ${FLAKE8_FLAGS} $$(git diff --name-only | grep .py)
 lint: lint_black flake lint_isort ## Realiza a análise estática do código: black, flake, mypy e isort
 
 ## @ format python files
-.PHONY: black isort format
+.PHONY: black isort format git_format
 black:
 	black ${PROJECT}
 isort:
 	isort ${ISORT_FLAGS} ${PROJECT}
+git_format:## formata somente os arquivos alterados (git)
+	@black $$(git diff --name-only | grep .py)
+	@isort ${ISORT_FLAGS} $$(git diff --name-only | grep .py)
 format: isort black ## Formata os arquivos python usando black e isort

@@ -65,7 +65,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-DATABASES = DatabaseMapper(config("DATABASE_URL", ""))
+DATABASES = DatabaseMapper(config("DATABASE_URLS", ""))
 DATABASE_ROUTERS = ["multitenant.router.TenantRouter"]
 TENANTS = TenantsMapper(config("TENANTS_DOMAIN", ""))
 
